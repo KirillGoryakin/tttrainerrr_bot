@@ -1,10 +1,12 @@
 from config import TELEGRAM_TOKEN
 from commands import commands
+from handlers import handlers
 from questionnaire import ask_questionnaire_question, questionnaire_questions
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters, CallbackContext
 
 def questionnaire_finished(update: Update, context: CallbackContext):
+  context.user_data['state'] = 'idle'
   update.message.reply_text("Спасибо за предоставленную информацию!")
   commands['menu'](update, context)
 
@@ -28,7 +30,7 @@ def handle_button(update: Update, context: CallbackContext):
   query.answer()
   data = query.data.split(':')
   print(data)
-  if data[0] == "command":
+  if data[0] == "command" and data[1] in commands:
     commands[data[1]](query, context)
     return
 
@@ -37,14 +39,24 @@ def handle_button(update: Update, context: CallbackContext):
   if not ask_questionnaire_question(query, context):
     questionnaire_finished(query, context)
 
+def handle_photo(update: Update, context: CallbackContext):
+  state = context.user_data['state']
+  if state in handlers:
+    handlers[state](update, context)
+  
+  context.user_data['state'] = 'idle'
+  commands['menu'](update, context)
+
 def main():
   updater = Updater(TELEGRAM_TOKEN, use_context=True)
   dp = updater.dispatcher
-
-  dp.add_handler(CommandHandler("start", commands['start']))
-  dp.add_handler(CommandHandler("menu", commands['menu']))
-  dp.add_handler(CommandHandler("assessment", commands['assessment']))
+  
+  # Add Commands
+  for c in commands.keys():
+    dp.add_handler(CommandHandler(c, commands[c]))
+  
   dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
+  dp.add_handler(MessageHandler(Filters.photo, handle_photo))
   dp.add_handler(CallbackQueryHandler(handle_button))
 
   updater.start_polling()

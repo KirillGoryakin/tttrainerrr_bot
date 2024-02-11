@@ -3,7 +3,7 @@ from telegram.constants import PARSEMODE_MARKDOWN
 from telegram.ext import CallbackContext
 
 questionnaire_questions = [
-  { "name": "sex", "text": "Ваш пол", "options": ["м", "ж"] },
+  { "name": "sex", "text": "Ваш пол", "options": ["Мужской", "Женский"] },
   { "name": "age", "text": "Сколько вам полных лет?\n_В ответе напишите только число_", "options": [] },
   { "name": "weight", "text": "Какой ваш вес в килограммах?\n_В ответе напишите только число_", "options": [] },
   { "name": "height", "text": "Какой ваш рост в сантиметрах?\n_В ответе напишите только число_", "options": [] },
