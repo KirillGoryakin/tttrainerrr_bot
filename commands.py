@@ -53,5 +53,5 @@ commands = {
   "start": start,
   "menu": menu,
   "assessment": assessment,
-  "food_assessment": food_assessment,
+  # "food_assessment": food_assessment,
 }
