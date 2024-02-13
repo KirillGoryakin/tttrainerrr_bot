@@ -31,7 +31,7 @@ def menu(update: Update, context: CallbackContext):
     reply_markup=InlineKeyboardMarkup([
       [InlineKeyboardButton("Пройти анкету заново", callback_data="command:start")],
       [InlineKeyboardButton("✨ Оценить своё состояние", callback_data="command:assessment")],
-      [InlineKeyboardButton("✨ Оценить свою еду по фото", callback_data="command:food_assessment")],
+      # [InlineKeyboardButton("✨ Оценить свою еду по фото", callback_data="command:food_assessment")],
     ]),
   )
 
